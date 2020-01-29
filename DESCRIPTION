@@ -1,0 +1,29 @@
+Package: HelpingHand
+Type: Package
+Title: A helping hand
+Version: 0.1.0
+Author: Olivier M. F. Martin
+Maintainer: Olivier M. F. Martin <oliviermfmartin@tutanota.com>
+Description: A set of functions that helped me at some point.
+URL: http://github.com/oliviermfmartin/HelpingHand
+BugReports: https://github.com/oliviermfmartin/HelpingHand/issues
+Depends:
+    data.table
+Imports:
+    ggplot2,
+    ggpubr,
+    matrixStats,
+    BASiCS,
+    stringr,
+    AnnotationDbi,
+    org.Ce.eg.db,
+    KEGG.db,
+    clusterProfiler,
+    MASS
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
