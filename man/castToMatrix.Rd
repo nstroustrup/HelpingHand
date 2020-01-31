@@ -4,20 +4,22 @@
 \alias{castToMatrix}
 \title{Cast a data.table to a matrix}
 \usage{
-castToMatrix(data, formula, fun.aggregate, value.var, ...)
+castToMatrix(data, formula, value.var, fun.aggregate, fill = NA, ...)
 }
 \arguments{
 \item{data}{ A \code{data.table}.}
 
 \item{formula}{A formula of the form LHS ~ RHS to cast, see Details.}
 
+\item{value.var}{Name of the column whose values will be filled to cast. Function \code{guess()} tries to, well, guess this column automatically, if none is provided.
+
+  Cast multiple \code{value.var} columns simultaneously by passing their names as a \code{character} vector. See Examples. }
+
 \item{fun.aggregate}{Should the data be aggregated before casting? If the formula doesn't identify a single observation for each cell, then aggregation defaults to \code{length} with a message.
 
   To use multiple aggregation functions, pass a \code{list}; see Examples. }
 
-\item{value.var}{Name of the column whose values will be filled to cast. Function \code{guess()} tries to, well, guess this column automatically, if none is provided.
-
-  Cast multiple \code{value.var} columns simultaneously by passing their names as a \code{character} vector. See Examples. }
+\item{fill}{Value with which to fill missing cells. If \code{fun.aggregate} is present, takes the value by applying the function on a 0-length vector.}
 
 \item{...}{Any other arguments that may be passed to the aggregating function.}
 }

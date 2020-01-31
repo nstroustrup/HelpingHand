@@ -8,9 +8,10 @@ Description: A set of functions that helped me at some point.
 URL: http://github.com/oliviermfmartin/HelpingHand
 BugReports: https://github.com/oliviermfmartin/HelpingHand/issues
 Depends:
-    data.table
-Imports:
+    data.table,
     ggplot2,
+    magrittr
+Imports:
     ggpubr,
     matrixStats,
     BASiCS,

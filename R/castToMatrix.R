@@ -11,18 +11,28 @@
 #' @seealso \link[data.table]{dcast}
 #'
 #' @import data.table
+#' @import magrittr
 #' @export
 #'
 castToMatrix <- function(data,
                          formula,
-                         fun.aggregate,
                          value.var,
+                         fun.aggregate,
+                         fill = NA,
                          ...) {
   data <- data.table::as.data.table(data)
-  mat <- data.table::dcast(data = data,
-                           formula = formula,
-                           fun.aggregate = fun.aggregate,
-                           value.var = value.var)
+  if (missing(fun.aggregate)) {
+    mat <- data.table::dcast(data = data,
+                             formula = formula,
+                             value.var = value.var,
+                             fill = fill)
+  } else {
+    mat <- data.table::dcast(data = data,
+                             formula = formula,
+                             fun.aggregate = fun.aggregate,
+                             value.var = value.var,
+                             fill = fill)
+  }
   var <- as.character(formula)[2]
   rn <- mat[[var]]
   mat <- mat[, (var) := NULL]
