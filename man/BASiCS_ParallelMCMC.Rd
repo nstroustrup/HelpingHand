@@ -14,6 +14,7 @@ BASiCS_ParallelMCMC(
   MinCount = 10L,
   PropMinCount = 0.85,
   NCores = 2L,
+  Name = paste0(sample(c(0:9, letters), 10), collapse = ""),
   Verbose = TRUE
 )
 }
@@ -40,6 +41,8 @@ residual over-dispersion is not confounded by mean expression. Recommended
 setting is \code{Regression = TRUE}.}
 
 \item{MinCount}{integer; Minimum number of counts for a gene.}
+
+\item{Name}{character; Chain identification name.}
 
 \item{PropMinCount;}{numeric; Proportion of samples with minimum count.}
 

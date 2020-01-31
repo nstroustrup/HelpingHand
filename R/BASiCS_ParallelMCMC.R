@@ -16,6 +16,7 @@
 #' @param PropMinCount; numeric; Proportion of samples with minimum count.
 #' @param PropMinCount; numeric; Proportion of samples with minimum count.
 #' @param NCores; integer; Number of cores.
+#' @param Name character; Chain identification name.
 #' @param Verbose; bool; Print progress in \code{./logs} directory?
 #'
 #' @return A list of \link[BASiCS]{BASiCS_Chain} object.
@@ -34,6 +35,7 @@ BASiCS_ParallelMCMC <- function(CountsList,
                                 MinCount = 10L,
                                 PropMinCount = 0.85,
                                 NCores = 2L,
+                                Name = paste0(sample(c(0:9, letters), 10), collapse = ""),
                                 Verbose = TRUE) {
 
   if (! is.list(CountsList)) CountsList <- list(CountsList)
@@ -68,7 +70,7 @@ BASiCS_ParallelMCMC <- function(CountsList,
 
     if (Verbose) {
       temps <- format(Sys.time(), "%Y_%m_%d_%Hh%M")
-      output_filename <- file(paste0("./logs/basics_", temps, "_chain", i, ".out"), open = "wt")
+      output_filename <- file(paste0("./logs/basics_", Name, temps, "_chain", i, ".out"), open = "wt")
       sink(file = output_filename, type = "output")
     }
 
