@@ -33,26 +33,26 @@ runGSEA <- function(geneList,
   geneList <- sort(geneList, decreasing = TRUE)
 
   # Run GSEA
-  kegg <- .tryCatchNull(clusterProfiler::gseKEGG(geneList      = geneList,
+  kegg <- .tryCatchNull(clusterProfiler::gseKEGG(geneList          = geneList,
                                                  use_internal_data = use_internal_data,
-                                                 organism      = 'cel',
-                                                 keyType       = "ncbi-geneid",
-                                                 pvalueCutoff  = pvalueCutoff,
-                                                 pAdjustMethod = "BH",
-                                                 nPerm         = nPerm,
-                                                 minGSSize     = 10,
-                                                 maxGSSize     = 150,
-                                                 verbose       = FALSE))
+                                                 organism          = 'cel',
+                                                 keyType           = "ncbi-geneid",
+                                                 pvalueCutoff      = pvalueCutoff,
+                                                 pAdjustMethod     = "BH",
+                                                 nPerm             = nPerm,
+                                                 minGSSize         = 10,
+                                                 maxGSSize         = 150,
+                                                 verbose           = FALSE))
 
-  go_bp <- .tryCatchNull(clusterProfiler::gseGO(geneList  = geneList,
-                                                OrgDb        = org.Ce.eg.db::org.Ce.eg.db,
-                                                ont          = "BP",
-                                                nPerm        = nPerm,
+  go_bp <- .tryCatchNull(clusterProfiler::gseGO(geneList      = geneList,
+                                                OrgDb         = org.Ce.eg.db::org.Ce.eg.db,
+                                                ont           = "BP",
+                                                nPerm         = nPerm,
                                                 pAdjustMethod = "BH",
-                                                minGSSize    = 10,
-                                                maxGSSize    = 200,
-                                                pvalueCutoff = pvalueCutoff,
-                                                verbose      = FALSE))
+                                                minGSSize     = 10,
+                                                maxGSSize     = 200,
+                                                pvalueCutoff  = pvalueCutoff,
+                                                verbose       = FALSE))
   if (! is.null(go_bp)) {
     aux <- .convertEntrez(go_bp@result$core_enrichment)
     go_bp@result[, "core_enrichment_symbol"] <- aux$symbol
@@ -60,15 +60,15 @@ runGSEA <- function(geneList,
     go_bp@result[, "Description"] <- .formatNames(go_bp@result[, "Description"])
   }
 
-  go_mf <- .tryCatchNull(clusterProfiler::gseGO(geneList  = geneList,
-                                                OrgDb        = org.Ce.eg.db::org.Ce.eg.db,
-                                                ont          = "MF",
-                                                nPerm        = nPerm,
+  go_mf <- .tryCatchNull(clusterProfiler::gseGO(geneList      = geneList,
+                                                OrgDb         = org.Ce.eg.db::org.Ce.eg.db,
+                                                ont           = "MF",
+                                                nPerm         = nPerm,
                                                 pAdjustMethod = "BH",
-                                                minGSSize    = 10,
-                                                maxGSSize    = 200,
-                                                pvalueCutoff = pvalueCutoff,
-                                                verbose      = FALSE))
+                                                minGSSize     = 10,
+                                                maxGSSize     = 200,
+                                                pvalueCutoff  = pvalueCutoff,
+                                                verbose       = FALSE))
 
   if (! is.null(go_mf)) {
     aux <- .convertEntrez(go_mf@result$core_enrichment)
@@ -77,15 +77,15 @@ runGSEA <- function(geneList,
     go_mf@result[, "Description"] <- .formatNames(go_mf@result[, "Description"])
   }
 
-  go_cc <- .tryCatchNull(clusterProfiler::gseGO(geneList  = geneList,
-                                                OrgDb        = org.Ce.eg.db::org.Ce.eg.db,
-                                                ont          = "CC",
-                                                nPerm        = nPerm,
+  go_cc <- .tryCatchNull(clusterProfiler::gseGO(geneList      = geneList,
+                                                OrgDb         = org.Ce.eg.db::org.Ce.eg.db,
+                                                ont           = "CC",
+                                                nPerm         = nPerm,
                                                 pAdjustMethod = "BH",
-                                                minGSSize    = 10,
-                                                maxGSSize    = 200,
-                                                pvalueCutoff = pvalueCutoff,
-                                                verbose      = FALSE))
+                                                minGSSize     = 10,
+                                                maxGSSize     = 200,
+                                                pvalueCutoff  = pvalueCutoff,
+                                                verbose       = FALSE))
   if (! is.null(go_cc)) {
 
     aux <- .convertEntrez(go_cc@result$core_enrichment)
@@ -120,8 +120,8 @@ plotGSEA <- function(tables,
   nPerm <- tables$nPerm
 
   if (! is.null(go_bp)) {
-    go_bp_plot <- clusterProfiler::ridgeplot(go_bp, showCategory = showCategory) +
-      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01)) +
+    go_bp_plot <- suppressWarnings(clusterProfiler::ridgeplot(go_bp, showCategory = showCategory) +
+      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("GO BP")) +
       ggplot2::xlab("Enrichment score") +
       ggplot2::geom_vline(xintercept = 0) +
@@ -131,8 +131,8 @@ plotGSEA <- function(tables,
   }
 
   if (! is.null(go_mf)) {
-    go_mf_plot <- clusterProfiler::ridgeplot(go_mf, showCategory = showCategory) +
-      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01)) +
+    go_mf_plot <- suppressWarnings(clusterProfiler::ridgeplot(go_mf, showCategory = showCategory) +
+      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("GO MF")) +
       ggplot2::xlab("Enrichment score") +
       ggplot2::geom_vline(xintercept = 0) +
@@ -142,8 +142,8 @@ plotGSEA <- function(tables,
   }
 
   if (! is.null(go_cc)) {
-    go_cc_plot <- clusterProfiler::ridgeplot(go_cc, showCategory = showCategory) +
-      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01)) +
+    go_cc_plot <- suppressWarnings(clusterProfiler::ridgeplot(go_cc, showCategory = showCategory) +
+      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("GO CC")) +
       ggplot2::xlab("Enrichment score") +
       ggplot2::geom_vline(xintercept = 0) +
@@ -157,8 +157,8 @@ plotGSEA <- function(tables,
     kegg@result[, "core_enrichment_symbol"] <- aux$symbol
     kegg@result[, "core_enrichment_wormbase"] <- aux$wormbase
 
-    kegg_plot <- clusterProfiler::ridgeplot(kegg, showCategory = showCategory) +
-      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01)) +
+    kegg_plot <- suppressWarnings(clusterProfiler::ridgeplot(kegg, showCategory = showCategory) +
+      ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("KEGG")) +
       ggplot2::xlab("Enrichment score") +
       ggplot2::geom_vline(xintercept = 0) +
