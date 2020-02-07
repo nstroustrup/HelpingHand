@@ -1,3 +1,17 @@
+#' @name gpca
+#'
+#' @title GPCA
+#'
+#' @description Group-wise sparse principal component analysis
+#'
+#' @inheritParams groupSparseEigen
+#' @param x numeric matrix; data with variables as columns and samples as rows.
+#' @param scale logical; should the data be scaled?
+#' @param sign_correction logical; should \link{signCorrectionPCA} be called?
+#' @param return_data logical; should data be returned?
+#'
+#' @return A list with scores and loadings.
+#'
 #' @export
 gpca <- function(x,
                  groups,

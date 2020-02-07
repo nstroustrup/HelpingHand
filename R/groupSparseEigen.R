@@ -1,4 +1,23 @@
+#' @name groupSparseEigen
+#'
+#' @title Group-wise sparse spectral decomposition of a matrix
+#'
+#' @description Computes group-wise sparse eigenvalues and eigenvectors of a matrix.
+#'
+#' @details For each group defined in the \code{groups} parameter,
+#' variables not pertaining to the group see their covariance set to zero.
+#' Eigendecomposition is then performed on that matrix.
+#'
+#' @param cv covariance matrix;
+#' @param groups boolean matrix; affiliation matrix. Does the variable in row i pertain to the group in column j?
+#' @param trace logical; should progress be printed?
+#'
+#' @return A list containing the sparse eigenvector and eigenvalues.
+#'
+#' @seealso \link[base]{eigen}
+#'
 #' @export
+#'
 groupSparseEigen <- function(cv,
                              groups,
                              trace = FALSE) {

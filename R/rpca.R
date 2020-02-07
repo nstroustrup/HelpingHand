@@ -1,3 +1,15 @@
+#' @name rpca
+#'
+#' @title RPCA
+#'
+#' @description Rotated principal component analysis
+#'
+#' @inheritParams gpca
+#' @inheritParams GPArotation::oblimin
+#' @param k integer; number of principal components.
+#'
+#' @return A list with scores and loadings.
+#'
 #' @export
 rpca <- function(x,
                  k,

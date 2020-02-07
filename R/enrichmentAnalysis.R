@@ -120,7 +120,7 @@ plotGSEA <- function(tables,
   nPerm <- tables$nPerm
 
   if (! is.null(go_bp)) {
-    go_bp_plot <- suppressWarnings(clusterProfiler::ridgeplot(go_bp, showCategory = showCategory) +
+    go_bp_plot <- suppressMessages(clusterProfiler::ridgeplot(go_bp, showCategory = showCategory) +
       ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("GO BP")) +
       ggplot2::xlab("Enrichment score") +
@@ -131,7 +131,7 @@ plotGSEA <- function(tables,
   }
 
   if (! is.null(go_mf)) {
-    go_mf_plot <- suppressWarnings(clusterProfiler::ridgeplot(go_mf, showCategory = showCategory) +
+    go_mf_plot <- suppressMessages(clusterProfiler::ridgeplot(go_mf, showCategory = showCategory) +
       ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("GO MF")) +
       ggplot2::xlab("Enrichment score") +
@@ -142,7 +142,7 @@ plotGSEA <- function(tables,
   }
 
   if (! is.null(go_cc)) {
-    go_cc_plot <- suppressWarnings(clusterProfiler::ridgeplot(go_cc, showCategory = showCategory) +
+    go_cc_plot <- suppressMessages(clusterProfiler::ridgeplot(go_cc, showCategory = showCategory) +
       ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("GO CC")) +
       ggplot2::xlab("Enrichment score") +
@@ -157,7 +157,7 @@ plotGSEA <- function(tables,
     kegg@result[, "core_enrichment_symbol"] <- aux$symbol
     kegg@result[, "core_enrichment_wormbase"] <- aux$wormbase
 
-    kegg_plot <- suppressWarnings(clusterProfiler::ridgeplot(kegg, showCategory = showCategory) +
+    kegg_plot <- suppressMessages(clusterProfiler::ridgeplot(kegg, showCategory = showCategory) +
       ggplot2::scale_fill_gradient2(trans = "log10", limit = c(1/nPerm, 1), midpoint = log10(0.01))) +
       ggplot2::ggtitle(paste("KEGG")) +
       ggplot2::xlab("Enrichment score") +
