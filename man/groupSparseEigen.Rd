@@ -4,12 +4,28 @@
 \alias{groupSparseEigen}
 \title{Group-wise sparse spectral decomposition of a matrix}
 \usage{
-groupSparseEigen(cv, groups, trace = FALSE)
+groupSparseEigen(
+  x,
+  groups,
+  y = NULL,
+  lambda = NULL,
+  kernel = "linear",
+  bandwidth = NULL,
+  trace = FALSE
+)
 }
 \arguments{
-\item{cv}{covariance matrix;}
+\item{x}{numeric matrix; data with variables as columns and samples as rows.}
 
 \item{groups}{boolean matrix; affiliation matrix. Does the variable in row i pertain to the group in column j?}
+
+\item{y}{numeric matrix; confounder matrix with rows as samples and columns as confounding factors.}
+
+\item{lambda}{the tuning parameter, non-negative.}
+
+\item{kernel}{the kernel to use: "linear", "gaussian".}
+
+\item{bandwidth}{bandwidth h for Gaussian kernel. Optional.}
 
 \item{trace}{logical; should progress be printed?}
 }

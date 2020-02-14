@@ -7,16 +7,24 @@
 gpca(
   x,
   groups,
+  y = NULL,
+  lambda = NULL,
   scale = FALSE,
   sign_correction = TRUE,
   return_data = FALSE,
-  trace = FALSE
+  trace = FALSE,
+  kernel = "linear",
+  bandwidth = NULL
 )
 }
 \arguments{
 \item{x}{numeric matrix; data with variables as columns and samples as rows.}
 
 \item{groups}{boolean matrix; affiliation matrix. Does the variable in row i pertain to the group in column j?}
+
+\item{y}{numeric matrix; confounder matrix with rows as samples and columns as confounding factors.}
+
+\item{lambda}{the tuning parameter, non-negative.}
 
 \item{scale}{logical; should the data be scaled?}
 
@@ -25,6 +33,10 @@ gpca(
 \item{return_data}{logical; should data be returned?}
 
 \item{trace}{logical; should progress be printed?}
+
+\item{kernel}{the kernel to use: "linear", "gaussian".}
+
+\item{bandwidth}{bandwidth h for Gaussian kernel. Optional.}
 }
 \value{
 A list with scores and loadings.
