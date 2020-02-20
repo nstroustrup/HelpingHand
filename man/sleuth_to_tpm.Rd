@@ -4,7 +4,7 @@
 \alias{sleuth_to_tpm}
 \title{Convert a sleuth object to TPM}
 \usage{
-sleuth_to_tpm(obj, log = TRUE, pc = 0.5)
+sleuth_to_tpm(obj, log = TRUE, pc = 0.5, aggregation_column = "wb")
 }
 \arguments{
 \item{obj}{\code{sleuth} object.}

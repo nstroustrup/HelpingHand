@@ -12,7 +12,7 @@
 #'
 #' @export
 #'
-sleuth_to_tpm <- function(obj, log = TRUE, pc = 0.5) {
+sleuth_to_tpm <- function(obj, log = TRUE, pc = 0.5, aggregation_column = "wb") {
   obs_raw <- as.data.table(obj$obs_raw)
   setkeyv(obs_raw, "target_id")
 
@@ -39,8 +39,8 @@ sleuth_to_tpm <- function(obj, log = TRUE, pc = 0.5) {
   tpm <- apply(est_counts/eff_len, 2, function(x) 1e6 * x / sum(x))
 
   # aggregate to gene level
-  wb <- factor(so$target_mapping[match(rownames(tpm), so$target_mapping$target_id), ]$wb)
-  tpm <- apply(tpm, 2, function(x) tapply(x, wb, sum))
+  ag <- factor(so$target_mapping[match(rownames(tpm), so$target_mapping$target_id), ][, aggregation_column])
+  tpm <- apply(tpm, 2, function(x) tapply(x, ag, sum))
 
   # normalize
   sf <- obj$tpm_sf

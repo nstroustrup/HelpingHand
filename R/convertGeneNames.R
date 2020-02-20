@@ -12,7 +12,7 @@
 #'
 #' @export
 #'
-convertGene <- function(keys, column = "SYMBOL", keytype = "WORMBASE") {
+convertGene <- function(keys, column = "SYMBOL", keytype = "WORMBASE", x = org.Ce.eg.db::org.Ce.eg.db) {
   suppressMessages(AnnotationDbi::mapIds(x = org.Ce.eg.db::org.Ce.eg.db,
                                          keys = keys,
                                          column = column,

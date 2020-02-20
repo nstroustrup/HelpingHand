@@ -4,7 +4,12 @@
 \alias{convertGene}
 \title{Convert gene names}
 \usage{
-convertGene(keys, column = "SYMBOL", keytype = "WORMBASE")
+convertGene(
+  keys,
+  column = "SYMBOL",
+  keytype = "WORMBASE",
+  x = org.Ce.eg.db::org.Ce.eg.db
+)
 }
 \arguments{
 \item{keys}{the keys to select records for from the database.  All possible 
@@ -18,6 +23,10 @@ convertGene(keys, column = "SYMBOL", keytype = "WORMBASE")
     with the keys argument. For the \code{keys} method this is used to
     indicate which kind of keys are desired from \code{keys}
   }
+
+\item{x}{the \code{AnnotationDb} object. But in practice this will mean an 
+    object derived from an \code{AnnotationDb} object such as a \code{OrgDb} or 
+    \code{ChipDb} object.}
 }
 \value{
 character; Converted gene identification to the type specified by \code{column}.
