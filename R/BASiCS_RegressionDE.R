@@ -85,16 +85,20 @@ BASiCS_RegressionDE <- function(Chains,
   if (RegResDisp) AllResDisp <- simplify2array(lapply(Chains, function(x) x@parameters$epsilon))
 
   # compute median parameters for each chain
-  if (RegMean) {
-    MeanOverall <- vapply(Chains, function(x) matrixStats::colMedians(x@parameters$mu), FUN.VALUE = numeric(nGenes))
+    MeanOverall <- vapply(Chains, function(x)
+      matrixStats::colMedians(x@parameters$mu),
+                          FUN.VALUE = numeric(nGenes))
     rownames(MeanOverall) <- GeneName
-  }
   if (RegDisp) {
-    DispOverall <- vapply(Chains, function(x) matrixStats::colMedians(x@parameters$delta), FUN.VALUE = numeric(nGenes))
+    DispOverall <- vapply(Chains, function(x)
+      matrixStats::colMedians(x@parameters$delta),
+                          FUN.VALUE = numeric(nGenes))
     rownames(DispOverall) <- GeneName
   }
   if (RegResDisp) {
-    ResDispOverall <- vapply(Chains, function(x) matrixStats::colMedians(x@parameters$epsilon), FUN.VALUE = numeric(nGenes))
+    ResDispOverall <- vapply(Chains, function(x)
+      matrixStats::colMedians(x@parameters$epsilon),
+                             FUN.VALUE = numeric(nGenes))
     rownames(ResDispOverall) <- GeneName
   }
 
@@ -156,17 +160,23 @@ BASiCS_RegressionDE <- function(Chains,
     message("Performing linear regressions on residual dispersion\n")
     ResDispCoefficients <- simplify2array(pbapply::pblapply(GeneIndex, function(gene) {
       sapply(1L:nIters, function(iteration) {
-        .lm.fit(ModelMatrix, AllResDisp[iteration, gene, ])$coefficients
+        y <- AllResDisp[iteration, gene, ]
+        if (any(is.na(y)))
+          rep_len(NA_real_, ncol(ModelMatrix))
+        else
+          .lm.fit(ModelMatrix, y)$coefficients
       })
     }))
     dimnames(ResDispCoefficients) <- list(colnames(ModelMatrix), NULL, GeneName)
+    keep <- ! apply(is.na(ResDispCoefficients), 3, any)
+    ResDispCoefficients <- ResDispCoefficients[, , keep]
 
     MedianResDispCoefficient <- apply(ResDispCoefficients, 1, function(x) matrixStats::colMedians(x))
-    rownames(MedianResDispCoefficient) <- GeneName
+    rownames(MedianResDispCoefficient) <- GeneName[keep]
     colnames(MedianResDispCoefficient) <- colnames(ModelMatrix)
 
     SdResDispCoefficient <- apply(ResDispCoefficients, 1, function(x) matrixStats::colSds(x))
-    rownames(SdResDispCoefficient) <- GeneName
+    rownames(SdResDispCoefficient) <- GeneName[keep]
     colnames(SdResDispCoefficient) <- colnames(ModelMatrix)
 
   } else {
@@ -183,7 +193,8 @@ BASiCS_RegressionDE <- function(Chains,
                                         ProbThreshold = ProbThresholdM,
                                         GenesSelect = GenesSelect,
                                         EFDR = EFDR_M,
-                                        Task = paste0("Differential mean (", paste(CoeffNames, collapse = " "), ")"),
+                                        Task = paste0("Differential mean (",
+                                                      paste(CoeffNames, collapse = " "), ")"),
                                         Suffix = "M")
     })
     names(AuxMean) <- ClassNames
@@ -197,7 +208,8 @@ BASiCS_RegressionDE <- function(Chains,
                                         ProbThreshold = ProbThresholdD,
                                         GenesSelect = GenesSelect,
                                         EFDR = EFDR_D,
-                                        Task = paste0("Differential dispersion (", paste(CoeffNames, collapse = " "), ")"),
+                                        Task = paste0("Differential dispersion (",
+                                                      paste(CoeffNames, collapse = " "), ")"),
                                         Suffix = "D")
     })
     names(AuxDisp) <- ClassNames
@@ -211,7 +223,8 @@ BASiCS_RegressionDE <- function(Chains,
                                         ProbThreshold = ProbThresholdR,
                                         GenesSelect = GenesSelect,
                                         EFDR = EFDR_R,
-                                        Task = paste0("Differential residual dispersion (", paste(CoeffNames, collapse = " "), ")"),
+                                        Task = paste0("Differential residual dispersion (",
+                                                      paste(CoeffNames, collapse = " "), ")"),
                                         Suffix = "R")
     })
     names(AuxResDisp) <- ClassNames
@@ -261,7 +274,9 @@ BASiCS_RegressionDE <- function(Chains,
   }
 
   if (RegResDisp) {
-    TableResDisp <- data.table::data.table(GeneName = GeneName, MeanOverall = MeanOverall, ResDispOverall = ResDispOverall)
+    TableResDisp <- data.table::data.table(GeneName = dimnames(ResDispCoefficients)[[3]],
+                                           MeanOverall = MeanOverall[dimnames(ResDispCoefficients)[[3]], ],
+                                           ResDispOverall = ResDispOverall[dimnames(ResDispCoefficients)[[3]]])
     TableResDisp <- cbind(TableResDisp, .HiddenFormatAux(AuxResDisp,
                                                          MedianResDispCoefficient,
                                                          SdResDispCoefficient,

@@ -43,6 +43,12 @@ runGSEA <- function(geneList,
                                                  minGSSize         = 10,
                                                  maxGSSize         = 150,
                                                  verbose           = FALSE))
+  if (! is.null(kegg)) {
+    aux <- .convertEntrez(kegg@result$core_enrichment)
+    kegg@result[, "core_enrichment_symbol"] <- aux$symbol
+    kegg@result[, "core_enrichment_wormbase"] <- aux$wormbase
+    kegg@result[, "Description"] <- .formatNames(kegg@result[, "Description"])
+  }
 
   go_bp <- .tryCatchNull(clusterProfiler::gseGO(geneList      = geneList,
                                                 OrgDb         = org.Ce.eg.db::org.Ce.eg.db,
