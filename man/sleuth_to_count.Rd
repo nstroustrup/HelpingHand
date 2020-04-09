@@ -4,14 +4,24 @@
 \alias{sleuth_to_count}
 \title{Convert a sleuth object to count}
 \usage{
-sleuth_to_count(obj, log = TRUE, pc = 0.5)
+sleuth_to_count(
+  obj,
+  log = TRUE,
+  normalize = TRUE,
+  pc = 0.5,
+  aggregation_column = "wb"
+)
 }
 \arguments{
 \item{obj}{\code{sleuth} object.}
 
 \item{log}{bool; should natural log be returned?}
 
+\item{normalize}{bool; should normalized counts be returned}
+
 \item{pc}{numeric; pseudo-counts}
+
+\item{aggregation_column}{character; aggregation column}
 }
 \value{
 a matrix which contains a matrix of target_ids and transcript (or gene) expression in read counts.

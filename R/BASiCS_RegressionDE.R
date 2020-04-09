@@ -79,6 +79,13 @@ BASiCS_RegressionDE <- function(Chains,
   # colnames(ModelMatrix) <- make.names(colnames(ModelMatrix))
   # }
 
+  # replace NAs by zeros
+  for (i in 1:length(Chains)) {
+    Chains[[i]]@parameters$mu[is.na(Chains[[i]]@parameters$mu)] <- 0
+    Chains[[i]]@parameters$delta[is.na(Chains[[i]]@parameters$delta)] <- 0
+    Chains[[i]]@parameters$epsilon[is.na(Chains[[i]]@parameters$epsilon)] <- 0
+  }
+
   # place parameters into array
   if (RegMean) AllMean <- simplify2array(lapply(Chains, function(x) x@parameters$mu))
   if (RegDisp) AllDisp <- simplify2array(lapply(Chains, function(x) x@parameters$delta))
@@ -160,23 +167,17 @@ BASiCS_RegressionDE <- function(Chains,
     message("Performing linear regressions on residual dispersion\n")
     ResDispCoefficients <- simplify2array(pbapply::pblapply(GeneIndex, function(gene) {
       sapply(1L:nIters, function(iteration) {
-        y <- AllResDisp[iteration, gene, ]
-        if (any(is.na(y)))
-          rep_len(NA_real_, ncol(ModelMatrix))
-        else
-          .lm.fit(ModelMatrix, y)$coefficients
+        .lm.fit(ModelMatrix, AllResDisp[iteration, gene, ])$coefficients
       })
     }))
     dimnames(ResDispCoefficients) <- list(colnames(ModelMatrix), NULL, GeneName)
-    keep <- ! apply(is.na(ResDispCoefficients), 3, any)
-    ResDispCoefficients <- ResDispCoefficients[, , keep]
 
     MedianResDispCoefficient <- apply(ResDispCoefficients, 1, function(x) matrixStats::colMedians(x))
-    rownames(MedianResDispCoefficient) <- GeneName[keep]
+    rownames(MedianResDispCoefficient) <- GeneName
     colnames(MedianResDispCoefficient) <- colnames(ModelMatrix)
 
     SdResDispCoefficient <- apply(ResDispCoefficients, 1, function(x) matrixStats::colSds(x))
-    rownames(SdResDispCoefficient) <- GeneName[keep]
+    rownames(SdResDispCoefficient) <- GeneName
     colnames(SdResDispCoefficient) <- colnames(ModelMatrix)
 
   } else {
@@ -254,7 +255,8 @@ BASiCS_RegressionDE <- function(Chains,
 
   # tables
   if (RegMean) {
-    TableMean <- data.table::data.table(GeneName = GeneName, MeanOverall = MeanOverall)
+    TableMean <- data.table::data.table(GeneName = GeneName,
+                                        MeanOverall = MeanOverall)
     TableMean <- cbind(TableMean, .HiddenFormatAux(AuxMean,
                                                    MedianMeanCoefficient,
                                                    SdMeanCoefficient,
@@ -264,7 +266,9 @@ BASiCS_RegressionDE <- function(Chains,
   }
 
   if (RegDisp) {
-    TableDisp <- data.table::data.table(GeneName = GeneName, MeanOverall = MeanOverall, DispOverall = DispOverall)
+    TableDisp <- data.table::data.table(GeneName = GeneName,
+                                        MeanOverall = MeanOverall,
+                                        DispOverall = DispOverall)
     TableDisp <- cbind(TableDisp, .HiddenFormatAux(AuxDisp,
                                                    MedianDispCoefficient,
                                                    SdDispCoefficient,
@@ -274,9 +278,9 @@ BASiCS_RegressionDE <- function(Chains,
   }
 
   if (RegResDisp) {
-    TableResDisp <- data.table::data.table(GeneName = dimnames(ResDispCoefficients)[[3]],
-                                           MeanOverall = MeanOverall[dimnames(ResDispCoefficients)[[3]], ],
-                                           ResDispOverall = ResDispOverall[dimnames(ResDispCoefficients)[[3]]])
+    TableResDisp <- data.table::data.table(GeneName = GeneName,
+                                           MeanOverall = MeanOverall,
+                                           ResDispOverall = ResDispOverall)
     TableResDisp <- cbind(TableResDisp, .HiddenFormatAux(AuxResDisp,
                                                          MedianResDispCoefficient,
                                                          SdResDispCoefficient,
