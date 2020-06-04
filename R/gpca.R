@@ -24,6 +24,7 @@ gpca <- function(x,
                  y = NULL,
                  lambda = NULL,
                  scale = FALSE,
+                 center = TRUE,
                  sign_correction = TRUE,
                  return_data = FALSE,
                  trace = FALSE,
@@ -42,7 +43,7 @@ gpca <- function(x,
   if (nrow(groups) != nvariables) stop("Argument 'groups' must have same rows as rows in 'x'.")
 
   # scale and center data
-  z <- scale(x, center = TRUE, scale = scale)
+  z <- scale(x, center = center, scale = scale)
 
   # perform sparse eigendecomposition
   e <- groupSparseEigen(x = x,

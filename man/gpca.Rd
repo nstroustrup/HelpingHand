@@ -10,6 +10,7 @@ gpca(
   y = NULL,
   lambda = NULL,
   scale = FALSE,
+  center = TRUE,
   sign_correction = TRUE,
   return_data = FALSE,
   trace = FALSE,
